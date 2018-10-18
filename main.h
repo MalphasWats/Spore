@@ -121,7 +121,7 @@ static const __flash byte LEVEL_1[] = {
 */
 
 typedef struct level {
-    const byte *map;
+    const __memx byte *map;
     const byte width;
     const byte height;
 } level; 
