@@ -115,16 +115,16 @@ int main (void)
                 // work out offsets
                 // write to buffer
                 //shift_out_block(&GLYPHS[LEVEL_1[ SCREEN_COLUMNS * row + col ]*8], FALSE);
-                word index = (SCREEN_COLUMNS * row + col)*8;
+                word index = (current_level->width * row + col);
                 
-                buffer[col*8+0] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+1] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+2] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+3] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+4] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+5] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+6] = GLYPHS[current_level->map[ index++ ]];
-                buffer[col*8+7] = GLYPHS[current_level->map[ index++ ]];
+                buffer[col*8+0] = GLYPHS[current_level->map[ index ]*8+0];
+                buffer[col*8+1] = GLYPHS[current_level->map[ index ]*8+1];
+                buffer[col*8+2] = GLYPHS[current_level->map[ index ]*8+2];
+                buffer[col*8+3] = GLYPHS[current_level->map[ index ]*8+3];
+                buffer[col*8+4] = GLYPHS[current_level->map[ index ]*8+4];
+                buffer[col*8+5] = GLYPHS[current_level->map[ index ]*8+5];
+                buffer[col*8+6] = GLYPHS[current_level->map[ index ]*8+6];
+                buffer[col*8+7] = GLYPHS[current_level->map[ index ]*8+7];
             }
             
             // draw buffer
