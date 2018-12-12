@@ -5,82 +5,76 @@
 word t = 0;
 word btn_timer = 0;
 
-byte buffer[SCREEN_WIDTH];
+Viewport viewport = {.x=0, .y=0};
 
-int viewport_x = 0;
-int viewport_y = 0;
-
-sprite sprites[MAX_SPRITES];
-sprite* player;
-level* levels[MAX_LEVELS];
-level* current_level;
+const Map *current_level;
 
 int main (void) 
 {    
-    initialise();
-        
-    display_image(&LOGO[0], 3, 3, 10, 2);
-    crap_beep(_A5, 140);
-    delay_ms(5);
-    crap_beep(_A8, 60);
+    // display logo
+    for(byte y=0 ; y<LOGO_HEIGHT ; y++)
+        for(byte x=0 ; x<LOGO_WIDTH ; x++)
+            buffer[(y+2)*SCREEN_WIDTH + (x+16)] = LOGO[y*LOGO_WIDTH + x];
+    draw();
+    
+    note(_A4, 90);
+    delay_ms(180);
+    note(_C5, 60);
+    delay_ms(120);
+    note(_E5, 60);
     
     delay_ms(SPLASH_DELAY);
     
-    /* Build World */
-    levels[0] = &(level){.map = &LEVEL_1[0], .width=20, .height=35};
+    byte buttons = 0;
     
-    current_level = levels[0];
-    
-    /* Create Sprites */
-    sprites[0] = (sprite){.glyph=PLAYER_SPRITE, .x=8, .y=8, .timer=0};
-    player = &sprites[0];
+    current_level = &LEVEL_1;
     
     for(ever)
     {
         t = millis();
         
-        word btn_val = read_buttons();
+        buttons = ~PINC;
         if (btn_timer == 0)
         {
-            if (btn_val >= _UP-BTN_THRESHOLD && btn_val <= _UP+BTN_THRESHOLD)
+            if (buttons & _LEFT)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                player->x -= 1;
+                viewport.x -= 1;
             }
-            else if(btn_val >= _DOWN-BTN_THRESHOLD && btn_val <= _DOWN+BTN_THRESHOLD)
+            else if(buttons & _RIGHT)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                player->x += 1;
+                viewport.x += 1;
             }
-            else if(btn_val >= _LEFT-BTN_THRESHOLD && btn_val <= _LEFT+BTN_THRESHOLD)
+            else if(buttons & _DOWN)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                player->y -= 1;
+                viewport.y -= 1;
             }
-            else if(btn_val >= _RIGHT-BTN_THRESHOLD && btn_val <= _RIGHT+BTN_THRESHOLD)
+            else if(buttons & _UP)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                player->y += 1;
+                viewport.y += 1;
             }
-            else if(btn_val >= _A-BTN_THRESHOLD && btn_val <= _A+BTN_THRESHOLD)
+            else if(buttons & _A)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
             }
-            else if(btn_val >= _B-BTN_THRESHOLD && btn_val <= _B+BTN_THRESHOLD)
+            else if(buttons & _B)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
             }
-            else if(btn_val >= _C-BTN_THRESHOLD && btn_val <= _C+BTN_THRESHOLD)
+            else if(buttons & _C)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
@@ -93,47 +87,95 @@ int main (void)
         // Update Viewport
         // Limit Viewport to Map
         
-        viewport_x = player->x-SCREEN_WIDTH/2;
-        viewport_y = player->y-SCREEN_HEIGHT/2;
+        //viewport.x = player->x-SCREEN_WIDTH/2;
+        //viewport.y = player->y-SCREEN_HEIGHT/2;
             
-        if (viewport_x < 0)
-            viewport_x = 0;
-        if (viewport_y < 0)
-            viewport_y = 0;
+        if (viewport.x < 0)
+            viewport.x = 0;
+        if (viewport.y < 0)
+            viewport.y = 0;
         
-        if (viewport_x + SCREEN_WIDTH > current_level->width*8)
-            viewport_x = current_level->width*8 - SCREEN_WIDTH;
-        if (viewport_y + SCREEN_HEIGHT > current_level->height*8)
-            viewport_y = current_level->height*8 - SCREEN_HEIGHT;
+        if (viewport.x + SCREEN_WIDTH > current_level->cols*8)
+            viewport.x = current_level->cols*8 - SCREEN_WIDTH;
+        if (viewport.y + SCREEN_HEIGHT > current_level->rows*8)
+            viewport.y = current_level->rows*8 - SCREEN_HEIGHT;
         
-        set_display_col_row(0, 0);
-        for (byte row=0 ; row<SCREEN_ROWS-1 ; row++) // Map only displayed in first 7 rows.
-        {
-            for (byte col=0 ; col<SCREEN_COLUMNS ; col++)
-            {
-                // calculate map index
-                // work out offsets
-                // write to buffer
-                //shift_out_block(&GLYPHS[LEVEL_1[ SCREEN_COLUMNS * row + col ]*8], FALSE);
-                word index = (current_level->width * row + col);
-                
-                buffer[col*8+0] = GLYPHS[current_level->map[ index ]*8+0];
-                buffer[col*8+1] = GLYPHS[current_level->map[ index ]*8+1];
-                buffer[col*8+2] = GLYPHS[current_level->map[ index ]*8+2];
-                buffer[col*8+3] = GLYPHS[current_level->map[ index ]*8+3];
-                buffer[col*8+4] = GLYPHS[current_level->map[ index ]*8+4];
-                buffer[col*8+5] = GLYPHS[current_level->map[ index ]*8+5];
-                buffer[col*8+6] = GLYPHS[current_level->map[ index ]*8+6];
-                buffer[col*8+7] = GLYPHS[current_level->map[ index ]*8+7];
-            }
-            
-            // draw buffer
-            for (byte x=0 ; x<SCREEN_WIDTH ; x++)
-                shift_out_byte(buffer[x]);
-        }
-        
+        draw_map(current_level, viewport.x, viewport.y);
+               
         /* Display HUD on bottom row */
         
         
+    }
+}
+
+void draw_map(const Map __memx *m, word x, word y)
+{
+    byte x_offset = x & 7; // x % 8
+    x >>= 3;
+    
+    byte y_offset = y & 7; // y % 8
+    y >>= 3;
+    
+    byte NUM_ROWS = SCREEN_ROWS;
+    if (y_offset > 0)
+        NUM_ROWS += 1;
+    
+    byte NUM_COLS = SCREEN_COLUMNS;
+    if (x_offset > 0)
+        NUM_COLS += 1;
+    
+    for (byte row=0 ; row<NUM_ROWS ; row++)
+    {
+        for (byte col=0 ; col<NUM_COLS ; col++)
+        {
+            draw_tile(&GLYPHS[m->tiles[ m->cols * (row+y) + (col+x) ]*8], col*8-x_offset, row*8-y_offset); 
+        }
+    }
+}
+
+void draw_tile(const byte __memx *glyph, int x, int y)
+{
+    int y_ = y;
+    
+    if (y < 0)
+        y_ = 0-y;
+        
+    int tile_start = ((y_ >> 3) * SCREEN_WIDTH) + x;
+    
+    byte y_offset_a = y & 7; // y % 8
+    byte y_offset_b = 8-y_offset_a;
+    
+    byte glyph_index = 0;
+    byte tile_width = 8;
+    if (x < 0)
+    {
+        tile_start -= x;
+        glyph_index = 0-x;
+        tile_width -= glyph_index;
+    }
+    
+    if (x > 120)
+    {
+        tile_width = 128-x;
+    }
+    
+    if (y < 0)
+    {
+        y_offset_a = 8;
+        y_offset_b = 0-y;
+        tile_start -= SCREEN_WIDTH;
+    }
+    
+    if (y > 56)
+    {
+        y_offset_b = 8;
+    }
+    
+    for(byte tile_offset=0 ; tile_offset<tile_width ; tile_offset++, glyph_index++)
+    {
+        if (y_offset_a < 8)
+            buffer[tile_start+tile_offset] |= glyph[glyph_index] << y_offset_a;
+        if (y_offset_b < 8)
+            buffer[tile_start+SCREEN_WIDTH+tile_offset] |= glyph[glyph_index] >> y_offset_b;
     }
 }

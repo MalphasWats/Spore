@@ -1,25 +1,25 @@
 #ifndef MAIN_H
 # define MAIN_H
 
-#include "MAGE.h"
+#include "SPIKE.h"
 
 static const __flash byte GLYPHS[] = {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-    0x3f, 0x5f, 0xaf, 0xd0, 0xa7, 0xd6, 0xa7, 0xd3, 
-    0xa7, 0xd3, 0xa7, 0xd3, 0xa7, 0xd3, 0xa5, 0xd3, 
-    0xa5, 0xd2, 0xa5, 0xd0, 0xaa, 0xd5, 0xaa, 0x7f, 
-    0xf7, 0xf7, 0x63, 0x00, 0xaa, 0x55, 0xaa, 0xff, 
-    0xff, 0xff, 0xff, 0x00, 0xff, 0xfb, 0x6f, 0xff, 
-    0xff, 0xdf, 0xbb, 0xff, 0xdf, 0xff, 0xf7, 0xff, 
-    0xff, 0xff, 0x55, 0x00, 0xaa, 0x55, 0xaa, 0xff, 
-    0xff, 0xff, 0xff, 0x00, 0xe3, 0xd7, 0xf7, 0xf3, 
-    0xfc, 0xfa, 0xf5, 0x0b, 0xf7, 0xf7, 0x77, 0xf7, 
-    0xf7, 0xf7, 0xb7, 0xd7, 0xf7, 0xb7, 0xf7, 0xf7, 
-    0xf7, 0xf7, 0x77, 0x07, 0xab, 0x55, 0xaa, 0xfc, 
-    0xe7, 0xb7, 0xe7, 0x07, 0xe7, 0xf7, 0xd7, 0xf7, 
-    0xa7, 0xd7, 0xa3, 0xd0, 0xa3, 0xd7, 0xa5, 0xd3, 
-    0xbd, 0x42, 0xa5, 0xa5, 0xa5, 0xa5, 0x42, 0xbd, 
-    0xbd, 0x42, 0x99, 0xa5, 0xa5, 0x99, 0x42, 0xff,
+    0x03, 0x05, 0x0a, 0xf4, 0x1a, 0x94, 0x1a, 0x34, 
+    0x1a, 0x34, 0x1a, 0x34, 0x1a, 0x34, 0x5a, 0x34, 
+    0x5a, 0xb4, 0x5a, 0xf4, 0xaa, 0x54, 0xaa, 0x01, 
+    0x10, 0x10, 0x39, 0xff, 0xaa, 0x55, 0xaa, 0x00, 
+    0x00, 0x00, 0x00, 0xff, 0x00, 0x20, 0x09, 0x00, 
+    0x00, 0x04, 0x22, 0x00, 0x04, 0x00, 0x10, 0x00, 
+    0x00, 0x00, 0x55, 0xff, 0xaa, 0x55, 0xaa, 0x00, 
+    0x00, 0x00, 0x00, 0xff, 0x38, 0x14, 0x10, 0x30, 
+    0xc0, 0xa0, 0x50, 0x2f, 0x10, 0x10, 0x11, 0x10, 
+    0x10, 0x10, 0x12, 0x14, 0x10, 0x12, 0x10, 0x10, 
+    0x10, 0x10, 0x11, 0x1f, 0x2a, 0x55, 0xaa, 0xc0, 
+    0x18, 0x12, 0x18, 0x1f, 0x18, 0x10, 0x14, 0x10, 
+    0x1a, 0x14, 0x3a, 0xf4, 0x3a, 0x14, 0x5a, 0x34, 
+    0x42, 0xbd, 0x5a, 0x5a, 0x5a, 0x5a, 0xbd, 0x42, 
+    0x42, 0xbd, 0x66, 0x5a, 0x5a, 0x66, 0xbd, 0x00,
     
     // First 16 tiles above are for map
     
@@ -34,9 +34,10 @@ static const __flash byte GLYPHS[] = {
     0x78, 0xb4, 0x6c, 0x18, 0x70, 0xe0, 0x00, 0x00,  // Player Idle Up BR
 };
 
-#define PLAYER_SPRITE 20
-
-static const __flash byte LEVEL_1[] = {
+static const __flash Map LEVEL_1 = {
+        .cols = 20,
+        .rows = 35,
+        .tiles = {
       1,   2,   2,   2,   2,   2,   2,   0,   0,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   3,
       5,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   7,
       5,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   7,
@@ -72,77 +73,9 @@ static const __flash byte LEVEL_1[] = {
       5,   0,   0,   5,   0,   0,   0,   0,   7,  15,   6,   6,   6,   5,   0,   0,   0,   0,   0,   7,
       5,   0,   0,   5,   0,   0,   0,   0,   7,   6,   6,   6,  15,   5,   0,   0,   0,   0,   0,   7,
       9,  10,  10,  12,  10,   0,   0,  10,  12,  10,  10,  10,  10,  12,  10,  10,  10,  10,  10,  11,
-};
+}};
 
-/* Tile indexes are 2 tiles per byte
-
-    - -
-   |a|b| a = idx >> 4, b = idx & 0x0f   
-    - -
-*/
-/*
-static const __flash byte LEVEL_1[] = {
-	 18,  34,  34,  32,   2,  34,  34,  34,  34,  35,
-     80,   0,   0,   0,   0,   0,   0,   0,   0,   7,
-     80,   0,   0,   0,   0,   0,   0,   0,   0,   7,
-     80,   0,   0,   0,   0,   0,   0,   0,   0,   7,
-     80,   0,   0,   0,   0,   1,  34,  34,  34,  36,
-     80,   0,   0,   0,   0,   5, 246, 102, 230, 103,
-     80,   0,   0,   0,   0,   5, 110, 102, 102, 103,
-     80,   0,   0,   0,   0,   9, 170, 170, 170, 164,
-     80,   0,   0,   1,  34,  48,   0,   0,   0,   7,
-     80,   0,   0,   5, 102, 112,   0,   0,   0,   7,
-     80,   0,   0,   5, 230, 112,   0,   0,   0,   7,
-     80,   0,   0,   5, 111, 112,   0,   0,   0,   7,
-     80,   0,   0,   9, 170, 176,   0,   0,   0,   7,
-     80,   0,   0,   0,   0,   0,   0,   0,   0,   7,
-     80,   0,   0,   0,   0,   0,   0,   0,   0,   7,
-    130,  48,   0,   0,  18,  34, 210,   0,  34,  36,
-     94, 128,   2, 210,  64,   0,  80,   0,   0,   7,
-     86,  80,   0,  94, 112,   0,  80,   0,   0,   7,
-     95,  80,   0,  94, 112,   0,  80,   0,   0,   7,
-     86,  80,   0, 154,  64,   0, 131,   0,   0,   7,
-     95,  80,   0,   0, 112,   0, 156, 170,   0, 164,
-     86,  80,   0,   0, 112,   0,   0,   0,   0,   7,
-     94,  80,   0,   0, 112,   0,   0,   0,   0,   7,
-    138, 202,   0, 170, 176,   0,  18,  35,   0,   7,
-     80,   0,   0,   0,   0,   0,  86, 247,   0,   7,
-     80,   0,   0,   0,   0,   0,  94, 103,   0,   7,
-     80,   0,   0,   0,   0,   0, 138, 171,   0,   7,
-     80,   1,  32,   2, 210,  34,  64,   0,   0,   7,
-     80,   5,   0,   0, 127, 102, 112,   0,   0,   7,
-     80,   5,   0,   0, 118, 102, 147,   0,   0,   7,
-     80,   5,   0,   0, 127, 102, 104,  32,   2,  36,
-     80,   5,   0,   0, 118, 102, 245,   0,   0,   7,
-     80,   5,   0,   0, 127, 102, 101,   0,   0,   7,
-     80,   5,   0,   0, 118, 102, 245,   0,   0,   7,
-    154, 172, 160,  10, 202, 170, 172, 170, 170, 171,
-};
-*/
-
-typedef struct level {
-    const __memx byte *map;
-    const byte width;
-    const byte height;
-} level; 
-
-#define MAX_LEVELS 1
-
-typedef struct sprite {
-    byte glyph; //top_left
-    int x; //left
-    int y; //top
-    byte rows;
-    byte cols;
-    /*byte row;
-    byte y_offset;
-    
-    int xv;
-    int yv;*/
-    
-    word timer;
-} sprite;
-
-#define MAX_SPRITES 1
+void draw_tile(const byte __memx *glyph, int x, int y);
+void draw_map(const Map __memx *m, word x, word y);
 
 #endif
