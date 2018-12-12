@@ -100,11 +100,14 @@ int main (void)
         if (viewport.y + SCREEN_HEIGHT > current_level->rows*8)
             viewport.y = current_level->rows*8 - SCREEN_HEIGHT;
         
+        clear_buffer();
         draw_map(current_level, viewport.x, viewport.y);
                
         /* Display HUD on bottom row */
-        
-        
+        draw_tile(&GLYPHS[HUD_HEALTH], 1*8, 7*8);
+        draw_tile(&GLYPHS[HUD_LIVES], 6*8, 7*8);
+        draw_tile(&GLYPHS[HUD_AMMO], 9*8, 7*8);
+        draw_tile(&GLYPHS[HUD_KEYS], 13*8, 7*8);
     }
 }
 
@@ -116,7 +119,7 @@ void draw_map(const Map __memx *m, word x, word y)
     byte y_offset = y & 7; // y % 8
     y >>= 3;
     
-    byte NUM_ROWS = SCREEN_ROWS;
+    byte NUM_ROWS = SCREEN_ROWS-1;
     if (y_offset > 0)
         NUM_ROWS += 1;
     
