@@ -7,10 +7,11 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
-const Map *current_level;
+const Map __memx *current_level;
 
 int main (void) 
-{    
+{
+    initialise();    
     // display logo
     for(byte y=0 ; y<LOGO_HEIGHT ; y++)
         for(byte x=0 ; x<LOGO_WIDTH ; x++)
@@ -55,14 +56,14 @@ int main (void)
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.y -= 1;
+                viewport.y += 1;
             }
             else if(buttons & _UP)
             {
                 click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.y += 1;
+                viewport.y -= 1;
             }
             else if(buttons & _A)
             {
@@ -97,17 +98,21 @@ int main (void)
         
         if (viewport.x + SCREEN_WIDTH > current_level->cols*8)
             viewport.x = current_level->cols*8 - SCREEN_WIDTH;
-        if (viewport.y + SCREEN_HEIGHT > current_level->rows*8)
-            viewport.y = current_level->rows*8 - SCREEN_HEIGHT;
+        if (viewport.y + SCREEN_HEIGHT > current_level->rows*8+8)
+            viewport.y = current_level->rows*8 - SCREEN_HEIGHT+8;
         
         clear_buffer();
         draw_map(current_level, viewport.x, viewport.y);
                
         /* Display HUD on bottom row */
+        for(byte i=0 ; i<SCREEN_WIDTH ; i++)
+            buffer[7*SCREEN_WIDTH+i] = 0;
         draw_tile(&GLYPHS[HUD_HEALTH], 1*8, 7*8);
         draw_tile(&GLYPHS[HUD_LIVES], 6*8, 7*8);
         draw_tile(&GLYPHS[HUD_AMMO], 9*8, 7*8);
         draw_tile(&GLYPHS[HUD_KEYS], 13*8, 7*8);
+        
+        draw();
     }
 }
 
