@@ -7,7 +7,7 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
-Sprite player = {.x=9, .y=9, .glyph=24*8};
+Sprite player = {.x=16, .y=16, .glyph=24*8};
 
 const Map __memx *current_level;
 
@@ -152,10 +152,10 @@ void draw_map(const Map __memx *m, word x, word y)
 
 void draw_sprite(Sprite *s, Viewport *v)
 {
-    draw_tile(&GLYPHS[s->glyph], s->x-v->x, s->y-v->y);
-    draw_tile(&GLYPHS[s->glyph+8], (s->x-v->x)+8, s->y-v->y);
-    draw_tile(&GLYPHS[s->glyph+16], s->x-v->x, (s->y-v->y)+8);
-    draw_tile(&GLYPHS[s->glyph+24], (s->x-v->x)+8, (s->y-v->y)+8);
+    draw_tile(&GLYPHS[s->glyph], (s->x-v->x)-8, (s->y-v->y)-8);
+    draw_tile(&GLYPHS[s->glyph+8], s->x-v->x, (s->y-v->y)-8);
+    draw_tile(&GLYPHS[s->glyph+16], (s->x-v->x)-8, s->y-v->y);
+    draw_tile(&GLYPHS[s->glyph+24], s->x-v->x, s->y-v->y);
 }
 
 void draw_tile(const byte __memx *glyph, int x, int y)
