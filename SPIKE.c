@@ -2,7 +2,7 @@
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
-#include <util/delay.h>
+//#include <util/delay.h>
 
 volatile word _millis = 0;
 
@@ -15,11 +15,14 @@ word rng( void )
 
 void delay_ms( word ms )
 {
-    for(word i=0 ; i<ms ; i++)
-        _delay_ms(1);
-    //TODO: This doesn't deal with overflow of _millis
-    //ms += _millis;
-    //while(ms > _millis);
+    ms += _millis;
+    if (ms<_millis)
+    {
+        while(_millis > 0);
+        while(_millis < ms);
+    }
+    else
+        while(_millis < ms);
 }
 
 void initialise( void )
