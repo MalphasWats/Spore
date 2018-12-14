@@ -83,7 +83,15 @@ static const __flash Map LEVEL_1 = {
       9,  10,  10,  12,  10,   0,   0,  10,  12,  10,  10,  10,  10,  12,  10,  10,  10,  10,  10,  11,
 }};
 
+typedef struct Sprite {
+    int x;
+    int y;
+    
+    word glyph;
+} Sprite;
+
 void draw_tile(const byte __memx *glyph, int x, int y);
 void draw_map(const Map __memx *m, word x, word y);
+void draw_sprite(Sprite *s, Viewport *v);
 
 #endif

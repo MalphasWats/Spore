@@ -7,6 +7,8 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
+Sprite player = {.x=9, .y=9, .glyph=24*8};
+
 const Map __memx *current_level;
 
 int main (void) 
@@ -39,31 +41,27 @@ int main (void)
         {
             if (buttons & _LEFT)
             {
-                click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.x -= 1;
+                player.x -= 1;
             }
             else if(buttons & _RIGHT)
             {
-                click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.x += 1;
+                player.x += 1;
             }
             else if(buttons & _DOWN)
             {
-                click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.y += 1;
+                player.y += 1;
             }
             else if(buttons & _UP)
             {
-                click();
                 btn_timer = t+BTN_DELAY;
                 
-                viewport.y -= 1;
+                player.y -= 1;
             }
             else if(buttons & _A)
             {
@@ -85,11 +83,20 @@ int main (void)
         if (t >= btn_timer)
             btn_timer = 0;
         
-        // Update Viewport
-        // Limit Viewport to Map
+        //TODO: should check middle of player
+        //      ALSO player is 16x16
+        if (player.x < 0)
+            player.x = 0;
+        if (player.x > current_level->cols*8)
+            player.x = current_level->cols*8;
+        if (player.y < 0)
+            player.y = 0;
+        if (player.y > current_level->rows*8)
+            player.y = current_level->rows*8;
         
-        //viewport.x = player->x-SCREEN_WIDTH/2;
-        //viewport.y = player->y-SCREEN_HEIGHT/2;
+        
+        viewport.x = player.x-HALF_SCREEN_WIDTH;
+        viewport.y = player.y-HALF_SCREEN_HEIGHT;
             
         if (viewport.x < 0)
             viewport.x = 0;
@@ -103,6 +110,8 @@ int main (void)
         
         clear_buffer();
         draw_map(current_level, viewport.x, viewport.y);
+        
+        draw_sprite(&player, &viewport);
                
         /* Display HUD on bottom row */
         for(byte i=0 ; i<SCREEN_WIDTH ; i++)
@@ -139,6 +148,14 @@ void draw_map(const Map __memx *m, word x, word y)
             draw_tile(&GLYPHS[m->tiles[ m->cols * (row+y) + (col+x) ]*8], col*8-x_offset, row*8-y_offset); 
         }
     }
+}
+
+void draw_sprite(Sprite *s, Viewport *v)
+{
+    draw_tile(&GLYPHS[s->glyph], s->x-v->x, s->y-v->y);
+    draw_tile(&GLYPHS[s->glyph+8], (s->x-v->x)+8, s->y-v->y);
+    draw_tile(&GLYPHS[s->glyph+16], s->x-v->x, (s->y-v->y)+8);
+    draw_tile(&GLYPHS[s->glyph+24], (s->x-v->x)+8, (s->y-v->y)+8);
 }
 
 void draw_tile(const byte __memx *glyph, int x, int y)

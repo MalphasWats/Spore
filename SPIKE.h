@@ -51,6 +51,9 @@
 #define SCREEN_WIDTH    128
 #define SCREEN_HEIGHT   64
 
+#define HALF_SCREEN_WIDTH   128/2
+#define HALF_SCREEN_HEIGHT  64/2
+
 #define SCREEN_COLUMNS  16
 #define SCREEN_ROWS     8
 
