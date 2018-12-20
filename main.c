@@ -39,39 +39,7 @@ int main (void)
         buttons = ~PINC;
         if (btn_timer == 0)
         {
-            if(buttons & (_UP | _RIGHT))
-            {
-                btn_timer = t+BTN_DELAY;
-                
-                player.x += 1;
-                player.y -= 1;
-                player.glyph = P_UP_RIGHT;
-            }
-            else if(buttons & (_UP | _LEFT))
-            {
-                btn_timer = t+BTN_DELAY;
-                
-                player.x -= 1;
-                player.y -= 1;
-                player.glyph = P_UP_LEFT;
-            }
-            else if(buttons & (_DOWN | _LEFT))
-            {
-                btn_timer = t+BTN_DELAY;
-                
-                player.x -= 1;
-                player.y += 1;
-                player.glyph = P_DOWN_LEFT;
-            }
-            else if(buttons & (_DOWN | _RIGHT))
-            {
-                btn_timer = t+BTN_DELAY;
-                
-                player.x += 1;
-                player.y += 1;
-                player.glyph = P_DOWN_RIGHT;
-            }
-            else if (buttons & _LEFT)
+            if (buttons & _LEFT)
             {
                 btn_timer = t+BTN_DELAY;
                 
