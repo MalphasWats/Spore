@@ -7,7 +7,7 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
-Sprite player = {.x=16, .y=16, .glyph=24*8};
+Sprite player = {.x=16, .y=16, .glyph=P_UP};
 
 const Map __memx *current_level;
 
@@ -44,24 +44,28 @@ int main (void)
                 btn_timer = t+BTN_DELAY;
                 
                 player.x -= 1;
+                player.glyph = P_LEFT;
             }
             else if(buttons & _RIGHT)
             {
                 btn_timer = t+BTN_DELAY;
                 
                 player.x += 1;
+                player.glyph = P_RIGHT;
             }
             else if(buttons & _DOWN)
             {
                 btn_timer = t+BTN_DELAY;
                 
                 player.y += 1;
+                player.glyph = P_DOWN;
             }
             else if(buttons & _UP)
             {
                 btn_timer = t+BTN_DELAY;
                 
                 player.y -= 1;
+                player.glyph = P_UP;
             }
             else if(buttons & _A)
             {
