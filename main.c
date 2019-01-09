@@ -98,11 +98,11 @@ int main (void)
             btn_timer = 0;
         
         player.x += vx;
-        if (current_level->tiles[ ( (( (player.y+4) >>3) * SCREEN_COLUMNS) + ( (player.x+4) >> 3) ) ] > 0)
+        if (current_level->tiles[ ( (( player.y >>3) * current_level->cols) + ( player.x >> 3) ) ] > 0)
             player.x -= vx;
         
         player.y += vy;
-        if (current_level->tiles[ ( (( (player.y+4) >>3) * SCREEN_COLUMNS) + ( (player.x+4) >> 3) ) ] > 0)
+        if (current_level->tiles[ ( (( player.y >>3) * current_level->cols) + ( player.x >> 3) ) ] > 0)
             player.y -= vy;
         
         //TODO: should check middle of player
