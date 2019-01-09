@@ -32,9 +32,14 @@ int main (void)
     
     current_level = &LEVEL_1;
     
+    int vx, vy;
+    
     for(ever)
     {
         t = millis();
+        
+        vx = 0;
+        vy = 0;
         
         buttons = ~PINC;
         if (btn_timer == 0)
@@ -43,28 +48,32 @@ int main (void)
             {
                 btn_timer = t+BTN_DELAY;
                 
-                player.x -= 1;
+                //player.x -= 1;
+                vx = -1;
                 player.glyph = P_LEFT;
             }
             else if(buttons & _RIGHT)
             {
                 btn_timer = t+BTN_DELAY;
                 
-                player.x += 1;
+                //player.x += 1;
+                vx = 1;
                 player.glyph = P_RIGHT;
             }
             else if(buttons & _DOWN)
             {
                 btn_timer = t+BTN_DELAY;
                 
-                player.y += 1;
+                //player.y += 1;
+                vy = 1;
                 player.glyph = P_DOWN;
             }
             else if(buttons & _UP)
             {
                 btn_timer = t+BTN_DELAY;
                 
-                player.y -= 1;
+                //player.y -= 1;
+                vy = -1;
                 player.glyph = P_UP;
             }
             
@@ -87,6 +96,14 @@ int main (void)
         
         if (t >= btn_timer)
             btn_timer = 0;
+        
+        player.x += vx;
+        if (current_level->tiles[ ( (( (player.y+4) >>3) * SCREEN_COLUMNS) + ( (player.x+4) >> 3) ) ] > 0)
+            player.x -= vx;
+        
+        player.y += vy;
+        if (current_level->tiles[ ( (( (player.y+4) >>3) * SCREEN_COLUMNS) + ( (player.x+4) >> 3) ) ] > 0)
+            player.y -= vy;
         
         //TODO: should check middle of player
         //      ALSO player is 16x16
