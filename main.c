@@ -7,7 +7,7 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
-Sprite player = {.x=16, .y=16, .glyph=P_UP};
+Sprite player = {.x=6*8, .y=32*8, .glyph=P_UP};
 
 const Map __memx *current_level;
 
