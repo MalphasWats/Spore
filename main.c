@@ -139,7 +139,7 @@ int main (void)
         draw_sprite(&player, &viewport);
         
         /* Draw Doors */
-        for (byte i=0 ; i<MAX_DOORS ; i++)
+        for (byte i=0 ; i<current_level->num_doors ; i++)
         {
             if (current_level->doors[i].open)
             {
@@ -211,7 +211,7 @@ void draw_sprite(Sprite *s, Viewport *v)
 void draw_tile(const byte __memx *glyph, int x, int y)
 {
     /* is the tile actually visible */
-    if (x < -7 || x >= SCREEN_WIDTH+8 || y < -7 || y >= SCREEN_HEIGHT+8)
+    if (x < -7 || x >= SCREEN_WIDTH+7 || y < -7 || y >= SCREEN_HEIGHT)
         return;
     
     

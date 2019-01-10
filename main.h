@@ -126,6 +126,7 @@ typedef struct Level {
     word cols;
     word rows;
     Door doors[MAX_DOORS];
+    byte num_doors;
     byte tiles[];
 } Level;
 
@@ -137,6 +138,7 @@ static const __flash Level LEVEL_1 = {
         .doors = {
             {.x=4*8, .y=23*8, .open=FALSE},
         },
+        .num_doors = 1,
         .tiles = {
       1,   2,   2,   2,   2,   2,   2,   0,   0,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   3,
       5,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   7,

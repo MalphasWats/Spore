@@ -41,7 +41,7 @@
 #define _B         0b00000010
 #define _C         0b00000001
 
-#define BTN_DELAY       20
+#define BTN_DELAY       10
 
 #define SPLASH_DELAY    1500
 
