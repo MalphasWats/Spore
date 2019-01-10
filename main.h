@@ -106,7 +106,17 @@ static const __flash byte GLYPHS[] = {
 #define P_DOWN      48*8
 #define P_LEFT      60*8
 
-static const __flash Map LEVEL_1 = {
+typedef struct Level {
+    word start_x;
+    word start_y;
+    word cols;
+    word rows;
+    byte tiles[];
+} Level;
+
+static const __flash Level LEVEL_1 = {
+        .start_x = 6*8,
+        .start_y = 32*8,
         .cols = 20,
         .rows = 35,
         .tiles = {
@@ -145,7 +155,8 @@ static const __flash Map LEVEL_1 = {
       5,   0,   0,   5,   0,   0,   0,   0,   7,  15,   6,   6,   6,   5,   0,   0,   0,   0,   0,   7,
       5,   0,   0,   5,   0,   0,   0,   0,   7,   6,   6,   6,  15,   5,   0,   0,   0,   0,   0,   7,
       9,  10,  10,  12,  10,  20,  21,  10,  12,  10,  10,  10,  10,  12,  10,  10,  10,  10,  10,  11,
-}};
+            }
+};
 
 typedef struct Sprite {
     int x;
@@ -155,7 +166,7 @@ typedef struct Sprite {
 } Sprite;
 
 void draw_tile(const byte __memx *glyph, int x, int y);
-void draw_map(const Map __memx *m, word x, word y);
+void draw_level(const Level __memx *lvl, word x, word y);
 void draw_sprite(Sprite *s, Viewport *v);
 
 #endif

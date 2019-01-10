@@ -82,12 +82,6 @@
 typedef unsigned char byte;
 typedef unsigned int word;
 
-typedef struct Map {
-    word cols;
-    word rows;
-    byte tiles[];
-} Map;
-
 typedef struct Viewport {
     int x;
     int y;

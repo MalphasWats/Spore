@@ -7,9 +7,9 @@ word btn_timer = 0;
 
 Viewport viewport = {.x=0, .y=0};
 
-Sprite player = {.x=6*8, .y=32*8, .glyph=P_UP};
+Sprite player = {.x=0, .y=0, .glyph=P_UP};
 
-const Map __memx *current_level;
+const Level __memx *current_level;
 
 int main (void) 
 {
@@ -31,6 +31,9 @@ int main (void)
     byte buttons = 0;
     
     current_level = &LEVEL_1;
+    
+    player.x = current_level->start_x;
+    player.y = current_level->start_y;
     
     int vx, vy;
     
@@ -131,7 +134,7 @@ int main (void)
             viewport.y = current_level->rows*8 - SCREEN_HEIGHT+8;
         
         clear_buffer();
-        draw_map(current_level, viewport.x, viewport.y);
+        draw_level(current_level, viewport.x, viewport.y);
         
         draw_sprite(&player, &viewport);
                
@@ -147,7 +150,7 @@ int main (void)
     }
 }
 
-void draw_map(const Map __memx *m, word x, word y)
+void draw_level(const Level __memx *lvl, word x, word y)
 {
     byte x_offset = x & 7; // x % 8
     x >>= 3;
@@ -167,7 +170,7 @@ void draw_map(const Map __memx *m, word x, word y)
     {
         for (byte col=0 ; col<NUM_COLS ; col++)
         {
-            draw_tile(&GLYPHS[m->tiles[ m->cols * (row+y) + (col+x) ]*8], col*8-x_offset, row*8-y_offset); 
+            draw_tile(&GLYPHS[lvl->tiles[ lvl->cols * (row+y) + (col+x) ]*8], col*8-x_offset, row*8-y_offset); 
         }
     }
 }
