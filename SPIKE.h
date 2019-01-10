@@ -81,6 +81,7 @@
 
 typedef unsigned char byte;
 typedef unsigned int word;
+typedef unsigned char bool;
 
 typedef struct Viewport {
     int x;

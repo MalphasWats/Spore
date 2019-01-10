@@ -106,11 +106,26 @@ static const __flash byte GLYPHS[] = {
 #define P_DOWN      48*8
 #define P_LEFT      60*8
 
+#define DOOR_L_CLOSED   20*8
+#define DOOR_R_CLOSED   21*8
+#define DOOR_L_OPEN     22*8
+#define DOOR_R_OPEN     23*8
+
+
+typedef struct Door {
+    int x;
+    int y;
+    bool open;
+} Door;
+
+#define MAX_DOORS 5
+
 typedef struct Level {
     word start_x;
     word start_y;
     word cols;
     word rows;
+    Door doors[MAX_DOORS];
     byte tiles[];
 } Level;
 
@@ -119,6 +134,9 @@ static const __flash Level LEVEL_1 = {
         .start_y = 32*8,
         .cols = 20,
         .rows = 35,
+        .doors = {
+            {.x=4*8, .y=23*8, .open=FALSE},
+        },
         .tiles = {
       1,   2,   2,   2,   2,   2,   2,   0,   0,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   3,
       5,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   7,

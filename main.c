@@ -137,6 +137,21 @@ int main (void)
         draw_level(current_level, viewport.x, viewport.y);
         
         draw_sprite(&player, &viewport);
+        
+        /* Draw Doors */
+        for (byte i=0 ; i<MAX_DOORS ; i++)
+        {
+            if (current_level->doors[i].open)
+            {
+                draw_tile(&GLYPHS[DOOR_L_OPEN], current_level->doors[i].x-viewport.x, current_level->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_R_OPEN], (current_level->doors[i].x+8)-viewport.x, current_level->doors[i].y-viewport.y);
+            }
+            else
+            {
+                draw_tile(&GLYPHS[DOOR_L_CLOSED], current_level->doors[i].x-viewport.x, current_level->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_R_CLOSED], (current_level->doors[i].x+8)-viewport.x, current_level->doors[i].y-viewport.y);
+            }
+        }
                
         /* Display HUD on bottom row */
         for(byte i=0 ; i<SCREEN_WIDTH ; i++)
@@ -185,6 +200,11 @@ void draw_sprite(Sprite *s, Viewport *v)
 
 void draw_tile(const byte __memx *glyph, int x, int y)
 {
+    /* is the tile actually visible */
+    if (x < -7 || x >= SCREEN_WIDTH+8 || y < -7 || y >= SCREEN_HEIGHT+8)
+        return;
+    
+    
     int y_ = y;
     
     if (y < 0)
@@ -204,9 +224,9 @@ void draw_tile(const byte __memx *glyph, int x, int y)
         tile_width -= glyph_index;
     }
     
-    if (x > 120)
+    if (x > SCREEN_WIDTH-8)
     {
-        tile_width = 128-x;
+        tile_width = SCREEN_WIDTH-x;
     }
     
     if (y < 0)
@@ -216,7 +236,7 @@ void draw_tile(const byte __memx *glyph, int x, int y)
         tile_start -= SCREEN_WIDTH;
     }
     
-    if (y > 56)
+    if (y > SCREEN_HEIGHT-8)
     {
         y_offset_b = 8;
     }
