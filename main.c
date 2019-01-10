@@ -101,11 +101,11 @@ int main (void)
             btn_timer = 0;
         
         player.x += vx;
-        if (current_level->tiles[ ( (( player.y >>3) * current_level->cols) + ( player.x >> 3) ) ] > 0)
+        if ( check_collision(current_level, player.x, player.y) )
             player.x -= vx;
         
         player.y += vy;
-        if (current_level->tiles[ ( (( player.y >>3) * current_level->cols) + ( player.x >> 3) ) ] > 0)
+        if ( check_collision(current_level, player.x, player.y) )
             player.y -= vy;
         
         //TODO: should check middle of player
@@ -163,6 +163,11 @@ int main (void)
         
         draw();
     }
+}
+
+bool check_collision(const Level __memx *lvl, word x, word y)
+{
+    return lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ] > 0;
 }
 
 void draw_level(const Level __memx *lvl, word x, word y)

@@ -183,6 +183,8 @@ typedef struct Sprite {
     word glyph;
 } Sprite;
 
+bool check_collision(const Level __memx *lvl, word x, word y);
+
 void draw_tile(const byte __memx *glyph, int x, int y);
 void draw_level(const Level __memx *lvl, word x, word y);
 void draw_sprite(Sprite *s, Viewport *v);
