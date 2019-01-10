@@ -167,7 +167,12 @@ int main (void)
 
 bool check_collision(const Level __memx *lvl, word x, word y)
 {
-    return lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ] > 0;
+    if (lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ] == 0)
+    {
+        //TODO: Check Doors
+        return FALSE;
+    }
+    return TRUE;
 }
 
 void draw_level(const Level __memx *lvl, word x, word y)
