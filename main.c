@@ -177,7 +177,13 @@ int main (void)
         {
             buffer[( 7*SCREEN_WIDTH + 10*8) + 2*i] = 0x3e;
         }
-        //TODO: rounds
+        for (byte r=status.rounds, i=0 ; r>0 ; r>>=1, i++)
+        {
+            if (r == 1)
+                buffer[( 7*SCREEN_WIDTH + 11*8) + 2*(i+1)] = 0x60;
+            else
+                buffer[( 7*SCREEN_WIDTH + 11*8) + 2*i] = 0x66;
+        }
         
         draw_tile(&GLYPHS[HUD_KEYS], 13*8, 7*8);
         
