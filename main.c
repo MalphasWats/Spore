@@ -8,12 +8,14 @@ word btn_timer = 0;
 Viewport viewport = {.x=0, .y=0};
 
 Sprite player = {.x=0, .y=0, .glyph=P_UP};
+PlayerStatus status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=3};
 
 const Level __memx *current_level;
+LevelDoors *current_level_doors;
 
 int main (void) 
 {
-    initialise();    
+    initialise();
     // display logo
     for(byte y=0 ; y<LOGO_HEIGHT ; y++)
         for(byte x=0 ; x<LOGO_WIDTH ; x++)
@@ -31,6 +33,7 @@ int main (void)
     byte buttons = 0;
     
     current_level = &LEVEL_1;
+    current_level_doors = &LEVEL_1_DOORS;
     
     player.x = current_level->start_x;
     player.y = current_level->start_y;
@@ -139,27 +142,52 @@ int main (void)
         draw_sprite(&player, &viewport);
         
         /* Draw Doors */
-        for (byte i=0 ; i<current_level->num_doors ; i++)
+        for (byte i=0 ; i<current_level_doors->num_doors ; i++)
         {
             if (current_level->doors[i].open)
             {
-                draw_tile(&GLYPHS[DOOR_L_OPEN], current_level->doors[i].x-viewport.x, current_level->doors[i].y-viewport.y);
-                draw_tile(&GLYPHS[DOOR_R_OPEN], (current_level->doors[i].x+8)-viewport.x, current_level->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_L_OPEN], current_level_doors->doors[i].x-viewport.x, current_level_doors->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_R_OPEN], (current_level_doors->doors[i].x+8)-viewport.x, current_level_doors->doors[i].y-viewport.y);
             }
             else
             {
-                draw_tile(&GLYPHS[DOOR_L_CLOSED], current_level->doors[i].x-viewport.x, current_level->doors[i].y-viewport.y);
-                draw_tile(&GLYPHS[DOOR_R_CLOSED], (current_level->doors[i].x+8)-viewport.x, current_level->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_L_CLOSED], current_level_doors->doors[i].x-viewport.x, current_level_doors->doors[i].y-viewport.y);
+                draw_tile(&GLYPHS[DOOR_R_CLOSED], (current_level_doors->doors[i].x+8)-viewport.x, current_level_doors->doors[i].y-viewport.y);
             }
         }
                
         /* Display HUD on bottom row */
         for(byte i=0 ; i<SCREEN_WIDTH ; i++)
             buffer[7*SCREEN_WIDTH+i] = 0;
+        
         draw_tile(&GLYPHS[HUD_HEALTH], 1*8, 7*8);
+        for(byte i=0 ; i<status.health ; i++)
+        {
+            buffer[(7*SCREEN_WIDTH + 2*8) + 2*i] = 0x3e;
+        }
+        
         draw_tile(&GLYPHS[HUD_LIVES], 6*8, 7*8);
+        for(byte i=0 ; i<status.lives ; i++)
+        {
+            buffer[(7*SCREEN_WIDTH + 7*8) + 2*i] = 0x3e;
+        }
+        
         draw_tile(&GLYPHS[HUD_AMMO], 9*8, 7*8);
+        for(byte i=0 ; i<status.clips ; i++)
+        {
+            buffer[( 7*SCREEN_WIDTH + 10*8) + 2*i] = 0x3e;
+        }
+        //TODO: rounds
+        
         draw_tile(&GLYPHS[HUD_KEYS], 13*8, 7*8);
+        
+        for (byte k=status.keys, i=0 ; k>0 ; k>>=1, i++)
+        {
+            if (k == 1)
+                buffer[( 7*SCREEN_WIDTH + 14*8) + 2*(i+1)] = 0x60;
+            else
+                buffer[( 7*SCREEN_WIDTH + 14*8) + 2*i] = 0x66;
+        }
         
         draw();
     }
@@ -169,7 +197,24 @@ bool check_collision(const Level __memx *lvl, word x, word y)
 {
     if (lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ] == 0)
     {
-        //TODO: Check Doors
+        for (byte i=0 ; i<current_level_doors->num_doors ; i++)
+        {
+            if (current_level_doors->doors[i].x >= x && 
+                current_level_doors->doors[i].x < x+8 && 
+                current_level_doors->doors[i].y >= y &&
+                current_level_doors->doors[i].y < y+8 &&
+                !current_level_doors->doors[i].open)
+            {
+                if (status.keys > 0)
+                {
+                    status.keys -= 1;
+                    current_level_doors->doors[i].open = TRUE;
+                    return FALSE;
+                }
+                else
+                    return TRUE;
+            }
+        }
         return FALSE;
     }
     return TRUE;

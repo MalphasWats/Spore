@@ -130,15 +130,24 @@ typedef struct Level {
     byte tiles[];
 } Level;
 
+typedef struct LevelDoors {
+    byte num_doors;
+    Door doors[];
+} LevelDoors;
+
+LevelDoors LEVEL_1_DOORS = {
+        .num_doors = 1,
+        .doors = {
+            {.x=4*8, .y=23*8, .open=FALSE},
+        }
+};
+        
+
 static const __flash Level LEVEL_1 = {
         .start_x = 6*8,
         .start_y = 32*8,
         .cols = 20,
         .rows = 35,
-        .doors = {
-            {.x=4*8, .y=23*8, .open=FALSE},
-        },
-        .num_doors = 1,
         .tiles = {
       1,   2,   2,   2,   2,   2,   2,  20,  21,   2,   2,   2,   2,   2,   2,   2,   2,   2,   2,   3,
       5,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   7,
@@ -184,6 +193,16 @@ typedef struct Sprite {
     
     word glyph;
 } Sprite;
+
+typedef struct PlayerStatus {
+    byte health;
+    byte lives;
+    byte clips;
+    byte rounds;
+    byte keys;
+} PlayerStatus;
+
+#define MAX_HEALTH 12
 
 bool check_collision(const Level __memx *lvl, word x, word y);
 
