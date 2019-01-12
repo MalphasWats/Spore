@@ -144,7 +144,7 @@ int main (void)
         /* Draw Doors */
         for (byte i=0 ; i<current_level_doors->num_doors ; i++)
         {
-            if (current_level->doors[i].open)
+            if (current_level_doors->doors[i].open)
             {
                 draw_tile(&GLYPHS[DOOR_L_OPEN], current_level_doors->doors[i].x-viewport.x, current_level_doors->doors[i].y-viewport.y);
                 draw_tile(&GLYPHS[DOOR_R_OPEN], (current_level_doors->doors[i].x+8)-viewport.x, current_level_doors->doors[i].y-viewport.y);
@@ -163,37 +163,42 @@ int main (void)
         draw_tile(&GLYPHS[HUD_HEALTH], 1*8, 7*8);
         for(byte i=0 ; i<status.health ; i++)
         {
-            buffer[(7*SCREEN_WIDTH + 2*8) + 2*i] = 0x3e;
+            buffer[(7*SCREEN_WIDTH + 2*8) + 2*i] = 0x7c;
         }
         
         draw_tile(&GLYPHS[HUD_LIVES], 6*8, 7*8);
         for(byte i=0 ; i<status.lives ; i++)
         {
-            buffer[(7*SCREEN_WIDTH + 7*8) + 2*i] = 0x3e;
+            buffer[(7*SCREEN_WIDTH + 7*8) + 2*i] = 0x7c;
         }
         
         draw_tile(&GLYPHS[HUD_AMMO], 9*8, 7*8);
         for(byte i=0 ; i<status.clips ; i++)
         {
-            buffer[( 7*SCREEN_WIDTH + 10*8) + 2*i] = 0x3e;
+            buffer[( 7*SCREEN_WIDTH + 10*8) + 2*i] = 0x7c;
         }
-        for (byte r=status.rounds, i=0 ; r>0 ; r>>=1, i++)
+        byte r=status.rounds;
+        byte i=0;
+        while (r>1)
         {
-            if (r == 1)
-                buffer[( 7*SCREEN_WIDTH + 11*8) + 2*(i+1)] = 0x60;
-            else
-                buffer[( 7*SCREEN_WIDTH + 11*8) + 2*i] = 0x66;
+            buffer[( 7*SCREEN_WIDTH + 11*8) + 2*i] = 0x6c;
+            r >>= 1;
+            i += 1;
         }
+        if ( status.rounds & 1 )
+            buffer[( 7*SCREEN_WIDTH + 11*8) + 2*i] = 0x60;
         
         draw_tile(&GLYPHS[HUD_KEYS], 13*8, 7*8);
-        
-        for (byte k=status.keys, i=0 ; k>0 ; k>>=1, i++)
+        byte k=status.keys;
+        i=0;
+        while(k > 1)
         {
-            if (k == 1)
-                buffer[( 7*SCREEN_WIDTH + 14*8) + 2*(i+1)] = 0x60;
-            else
-                buffer[( 7*SCREEN_WIDTH + 14*8) + 2*i] = 0x66;
+            buffer[( 7*SCREEN_WIDTH + 14*8) + 2*i] = 0x6c;
+            k >>= 1;
+            i += 1;
         }
+        if ( status.keys & 1 )
+            buffer[( 7*SCREEN_WIDTH + 14*8) + 2*i] = 0x60;
         
         draw();
     }
@@ -205,12 +210,13 @@ bool check_collision(const Level __memx *lvl, word x, word y)
     {
         for (byte i=0 ; i<current_level_doors->num_doors ; i++)
         {
-            if (current_level_doors->doors[i].x >= x && 
-                current_level_doors->doors[i].x < x+8 && 
-                current_level_doors->doors[i].y >= y &&
-                current_level_doors->doors[i].y < y+8 &&
+            if (x >= current_level_doors->doors[i].x && 
+                x < current_level_doors->doors[i].x+16 && 
+                y >= current_level_doors->doors[i].y &&
+                y < current_level_doors->doors[i].y+8 &&
                 !current_level_doors->doors[i].open)
             {
+                //return TRUE;
                 if (status.keys > 0)
                 {
                     status.keys -= 1;

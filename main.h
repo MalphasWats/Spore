@@ -125,8 +125,6 @@ typedef struct Level {
     word start_y;
     word cols;
     word rows;
-    Door doors[MAX_DOORS];
-    byte num_doors;
     byte tiles[];
 } Level;
 
@@ -136,9 +134,10 @@ typedef struct LevelDoors {
 } LevelDoors;
 
 LevelDoors LEVEL_1_DOORS = {
-        .num_doors = 1,
+        .num_doors = 2,
         .doors = {
             {.x=4*8, .y=23*8, .open=FALSE},
+            {.x=5*8, .y=27*8, .open=FALSE},
         }
 };
         
