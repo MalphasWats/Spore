@@ -8,7 +8,7 @@ word btn_timer = 0;
 Viewport viewport = {.x=0, .y=0};
 
 Sprite player = {.x=0, .y=0, .glyph=P_UP};
-PlayerStatus status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=3};
+PlayerStatus status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=1};
 
 const Level __memx *current_level;
 LevelDoors *current_level_doors;
