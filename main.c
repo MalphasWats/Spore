@@ -112,7 +112,7 @@ int main (void)
                     }
                 }
                 
-                // Am I standing on a collectable item
+                // Am I standing on a collectible item
             }
         }
         
