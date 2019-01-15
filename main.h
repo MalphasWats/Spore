@@ -177,6 +177,9 @@ typedef struct Stats {
 #define MAX_HEALTH 12
 #define CLIP_SIZE 12
 
+#define SHOT_DELAY 80
+#define SHOT_ANIM_DELAY 20
+
 typedef struct Item {
     int x;
     int y;

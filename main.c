@@ -14,6 +14,7 @@ Sprite muzzle = {.x=0, .y=0, .glyph=0};
 Sprite bullet = {.x=0, .y=0, .glyph=0};
 
 word shoot_timer = 0;
+word shot_delay = 0;
 
 const Level __memx *current_level;
 LevelDoors *current_level_doors;
@@ -85,8 +86,20 @@ int main (void)
                 vy = -1;
                 player.glyph = P_UP;
             }
-            
-            
+            else if(buttons & _B)
+            {
+                click();
+                btn_timer = t+BTN_DELAY;
+            }
+            else if(buttons & _C)
+            {
+                click();
+                btn_timer = t+BTN_DELAY;
+            }
+        }
+        
+        if (shot_delay < t)
+        {
             if(buttons & _A)
             {
                 if (status.rounds > 0)
@@ -94,37 +107,37 @@ int main (void)
                     status.rounds -= 1;
                     click();
                     
-                    shoot_timer = t+6;
+                    shoot_timer = t+SHOT_ANIM_DELAY;
                     
                     if (player.glyph == P_UP)
                     {
                         muzzle.glyph = F_UP;
-                        muzzle.x = player.x;
-                        muzzle.y = player.y-8;
+                        muzzle.x = player.x-4;
+                        muzzle.y = player.y-15;
                         
                         //TODO: Bullet
                     }
                     else if (player.glyph == P_DOWN)
                     {
                         muzzle.glyph = F_DOWN;
-                        muzzle.x = player.x;
-                        muzzle.y = player.y+8;
+                        muzzle.x = player.x-5;
+                        muzzle.y = player.y+6;
                         
                         //TODO: Bullet
                     }
                     else if (player.glyph == P_LEFT)
                     {
                         muzzle.glyph = F_LEFT;
-                        muzzle.x = player.x-8;
-                        muzzle.y = player.y;
+                        muzzle.x = player.x-10;
+                        muzzle.y = player.y-4;
                         
                         //TODO: Bullet
                     }
                     else if (player.glyph == P_RIGHT)
                     {
                         muzzle.glyph = F_RIGHT;
-                        muzzle.x = player.x+8;
-                        muzzle.y = player.y;
+                        muzzle.x = player.x+2;
+                        muzzle.y = player.y-4;
                         
                         //TODO: Bullet
                     }
@@ -139,17 +152,7 @@ int main (void)
                     note(_A4, 10);
                 }
                 
-                btn_timer = t+BTN_DELAY;
-            }
-            else if(buttons & _B)
-            {
-                click();
-                btn_timer = t+BTN_DELAY;
-            }
-            else if(buttons & _C)
-            {
-                click();
-                btn_timer = t+BTN_DELAY;
+                shot_delay = t+SHOT_DELAY;
             }
         }
         
