@@ -177,7 +177,7 @@ typedef struct Stats {
 #define MAX_HEALTH 12
 #define CLIP_SIZE 12
 
-#define SHOT_DELAY 80
+#define SHOT_DELAY 95
 #define SHOT_ANIM_DELAY 20
 
 typedef struct Item {
@@ -259,6 +259,12 @@ static const __flash Level LEVEL_1 = {
             }
 };
 
+typedef struct cell {
+    int col;
+    int row;
+} cell;
+
+cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy);
 bool check_collision(const Level __memx *lvl, word x, word y);
 
 void draw_tile(const byte __memx *glyph, int x, int y);

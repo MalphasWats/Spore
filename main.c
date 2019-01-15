@@ -115,7 +115,10 @@ int main (void)
                         muzzle.x = player.x-4;
                         muzzle.y = player.y-15;
                         
-                        //TODO: Bullet
+                        cell c = cast_to_collision(current_level, player.x, player.y, 0, -1);
+                        bullet.x = (c.col * 8) - 1;
+                        bullet.y = (c.row+1) * 8;
+                        bullet.glyph = B_UP;
                     }
                     else if (player.glyph == P_DOWN)
                     {
@@ -123,7 +126,10 @@ int main (void)
                         muzzle.x = player.x-5;
                         muzzle.y = player.y+6;
                         
-                        //TODO: Bullet
+                        cell c = cast_to_collision(current_level, player.x, player.y, 0, 1);
+                        bullet.x = (c.col * 8) - 1 ;
+                        bullet.y = (c.row-1) * 8;
+                        bullet.glyph = B_DOWN;
                     }
                     else if (player.glyph == P_LEFT)
                     {
@@ -131,7 +137,10 @@ int main (void)
                         muzzle.x = player.x-10;
                         muzzle.y = player.y-4;
                         
-                        //TODO: Bullet
+                        cell c = cast_to_collision(current_level, player.x, player.y, -1, 0);
+                        bullet.x = (c.col+1) * 8;
+                        bullet.y = (c.row * 8) - 4;
+                        bullet.glyph = B_LEFT;
                     }
                     else if (player.glyph == P_RIGHT)
                     {
@@ -139,7 +148,10 @@ int main (void)
                         muzzle.x = player.x+2;
                         muzzle.y = player.y-4;
                         
-                        //TODO: Bullet
+                        cell c = cast_to_collision(current_level, player.x, player.y, 1, 0);
+                        bullet.x = ((c.col-1) * 8);
+                        bullet.y = (c.row * 8) - 4;
+                        bullet.glyph = B_RIGHT;
                     }
                 }
                 else
@@ -273,6 +285,22 @@ int main (void)
         
         draw();
     }
+}
+
+cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
+{
+    byte col = x >> 3;
+    byte row = y >> 3;
+    
+    while(lvl->tiles[ ( (row * lvl->cols) + col ) ] == 0)
+    {
+        col += dx;
+        row += dy;
+    }
+    
+    //TODO: need to check doors too
+    
+    return (cell){col, row};
 }
 
 bool check_collision(const Level __memx *lvl, word x, word y)
