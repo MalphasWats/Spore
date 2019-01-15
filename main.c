@@ -83,38 +83,18 @@ int main (void)
             
             else if(buttons & _A)
             {
-                //click();
+                click();
                 btn_timer = t+BTN_DELAY;
             }
             else if(buttons & _B)
             {
-                //click();
+                click();
                 btn_timer = t+BTN_DELAY;
             }
             else if(buttons & _C)
             {
-                // Am I near a door?
-                for (byte i=0 ; i<current_level_doors->num_doors ; i++)
-                {
-                    if (player.x >= current_level_doors->doors[i].x && 
-                        player.x < current_level_doors->doors[i].x+16 && 
-                        player.y+1 >= current_level_doors->doors[i].y &&
-                        player.y-1 < current_level_doors->doors[i].y+8 &&
-                        !current_level_doors->doors[i].open)
-                    {
-                        if (status.keys > 0)
-                        {
-                            status.keys -= 1;
-                            current_level_doors->doors[i].open = TRUE;
-                            
-                            click();
-                            
-                            btn_timer = t+BTN_DELAY;
-                        }
-                    }
-                }
-                
-                // Am I standing on a collectible item
+                click();
+                btn_timer = t+BTN_DELAY;
             }
         }
         
@@ -230,7 +210,29 @@ int main (void)
 
 bool check_collision(const Level __memx *lvl, word x, word y)
 {
-    return lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ];
+    if (lvl->tiles[ ( (( y >>3) * lvl->cols) + ( x >> 3) ) ] == 0)
+    {
+        for (byte i=0 ; i<current_level_doors->num_doors ; i++)
+        {
+            if (x >= current_level_doors->doors[i].x && 
+                x < current_level_doors->doors[i].x+16 && 
+                y >= current_level_doors->doors[i].y &&
+                y < current_level_doors->doors[i].y+8 &&
+                !current_level_doors->doors[i].open)
+            {
+                if (status.keys > 0)
+                {
+                    status.keys -= 1;
+                    current_level_doors->doors[i].open = TRUE;
+                    return FALSE;
+                }
+                else
+                    return TRUE;
+            }
+        }
+        return FALSE;
+    }
+    return TRUE;
 }
 
 void draw_level(const Level __memx *lvl, word x, word y)
