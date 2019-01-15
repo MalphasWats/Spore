@@ -154,10 +154,13 @@ int main (void)
             }
         }
         
-        /* Draw Doors */
+        /* Draw Items */
         for (byte i=0 ; i<current_level_items->num_items ; i++)
         {
-            draw_tile(&GLYPHS[current_level_items->items[i].glyph], current_level_items->items[i].x-viewport.x, current_level_items->items[i].y-viewport.y);
+            if (!current_level_items->items[i].collected)
+            {
+                draw_tile(&GLYPHS[current_level_items->items[i].glyph], current_level_items->items[i].x-viewport.x, current_level_items->items[i].y-viewport.y);
+            }
         }
                
         /* Display HUD on bottom row */
@@ -230,6 +233,29 @@ bool check_collision(const Level __memx *lvl, word x, word y)
                     return TRUE;
             }
         }
+        
+        for (byte i=0 ; i<current_level_items->num_items ; i++)
+        {
+            if (x >= current_level_items->items[i].x && 
+                x < current_level_items->items[i].x+8 && 
+                y >= current_level_items->items[i].y &&
+                y < current_level_items->items[i].y+8 &&
+                !current_level_items->items[i].collected)
+            {
+                current_level_items->items[i].collected = TRUE;
+                
+                status.health += current_level_items->items[i].stats.health;
+                status.lives += current_level_items->items[i].stats.lives;
+                status.clips += current_level_items->items[i].stats.clips;
+                status.keys += current_level_items->items[i].stats.keys;
+                
+                if (status.health > MAX_HEALTH)
+                    status.health = MAX_HEALTH;
+                
+                //TODO: limit other items too
+            }
+        }
+        
         return FALSE;
     }
     return TRUE;
