@@ -8,10 +8,11 @@ word btn_timer = 0;
 Viewport viewport = {.x=0, .y=0};
 
 Sprite player = {.x=0, .y=0, .glyph=P_UP};
-PlayerStatus status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=1};
+Stats status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=1};
 
 const Level __memx *current_level;
 LevelDoors *current_level_doors;
+LevelItems *current_level_items;
 
 int main (void) 
 {
@@ -34,6 +35,7 @@ int main (void)
     
     current_level = &LEVEL_1;
     current_level_doors = &LEVEL_1_DOORS;
+    current_level_items = &LEVEL_1_ITEMS;
     
     player.x = current_level->start_x;
     player.y = current_level->start_y;
@@ -170,6 +172,12 @@ int main (void)
                 draw_tile(&GLYPHS[DOOR_L_CLOSED], current_level_doors->doors[i].x-viewport.x, current_level_doors->doors[i].y-viewport.y);
                 draw_tile(&GLYPHS[DOOR_R_CLOSED], (current_level_doors->doors[i].x+8)-viewport.x, current_level_doors->doors[i].y-viewport.y);
             }
+        }
+        
+        /* Draw Doors */
+        for (byte i=0 ; i<current_level_items->num_items ; i++)
+        {
+            draw_tile(&GLYPHS[current_level_items->items[i].glyph], current_level_items->items[i].x-viewport.x, current_level_items->items[i].y-viewport.y);
         }
                
         /* Display HUD on bottom row */

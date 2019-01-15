@@ -93,13 +93,18 @@ static const __flash byte GLYPHS[] = {
     0x00, 0x02, 0x02, 0x02, 0x03, 0x06, 0x0c, 0x19, 
     0x22, 0x35, 0x37, 0x1b, 0x2d, 0x36, 0x00, 0x00, 
     
-
+    0x81, 0x7e, 0x4a, 0x5a, 0x5a, 0x4a, 0x7e, 0x81, // Clip pickup (72)
+    0x81, 0x7e, 0x66, 0x42, 0x42, 0x66, 0x7e, 0x81, // Health pickup
+    0x89, 0x76, 0x6a, 0x76, 0x76, 0x66, 0x7e, 0x81, // Key pickup
+    0x99, 0x66, 0x42, 0x86, 0x86, 0x42, 0x66, 0x99, // Life pickup
 };
 
 #define HUD_HEALTH 16*8
 #define HUD_LIVES 17*8
 #define HUD_AMMO 18*8
 #define HUD_KEYS 19*8
+
+#define KEY_PICKUP 74*8
 
 #define P_UP        24*8
 #define P_RIGHT     36*8
@@ -112,6 +117,13 @@ static const __flash byte GLYPHS[] = {
 #define DOOR_R_OPEN     23*8
 
 
+typedef struct Sprite {
+    int x;
+    int y;
+    
+    word glyph;
+} Sprite;
+
 typedef struct Door {
     int x;
     int y;
@@ -121,8 +133,8 @@ typedef struct Door {
 #define MAX_DOORS 5
 
 typedef struct Level {
-    word start_x;
-    word start_y;
+    int start_x;
+    int start_y;
     word cols;
     word rows;
     byte tiles[];
@@ -132,6 +144,31 @@ typedef struct LevelDoors {
     byte num_doors;
     Door doors[];
 } LevelDoors;
+
+
+typedef struct Stats {
+    byte health;
+    byte lives;
+    byte clips;
+    byte rounds;
+    byte keys;
+} Stats;
+
+typedef struct Item {
+    int x;
+    int y;
+    word glyph;
+    Stats stats;
+} Item;
+
+#define MAX_ITEMS 12
+typedef struct LevelItems {
+    byte num_items;
+    Item items[MAX_ITEMS];
+} LevelItems;
+
+
+#define MAX_HEALTH 12
 
 LevelDoors LEVEL_1_DOORS = {
         .num_doors = 6,
@@ -143,6 +180,13 @@ LevelDoors LEVEL_1_DOORS = {
             {.x=16*8, .y=20*8, .open=FALSE},
             {.x=15*8, .y=30*8, .open=FALSE},
         }
+};
+
+LevelItems LEVEL_1_ITEMS = {
+    .num_items=1,
+    .items = {
+        {.x=2*8, .y=32*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=1}},
+    }
 };
         
 
@@ -189,23 +233,6 @@ static const __flash Level LEVEL_1 = {
       9,  10,  10,  12,  10,  20,  21,  10,  12,  10,  10,  10,  10,  12,  10,  10,  10,  10,  10,  11,
             }
 };
-
-typedef struct Sprite {
-    int x;
-    int y;
-    
-    word glyph;
-} Sprite;
-
-typedef struct PlayerStatus {
-    byte health;
-    byte lives;
-    byte clips;
-    byte rounds;
-    byte keys;
-} PlayerStatus;
-
-#define MAX_HEALTH 12
 
 bool check_collision(const Level __memx *lvl, word x, word y);
 
