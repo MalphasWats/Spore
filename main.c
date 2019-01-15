@@ -8,7 +8,12 @@ word btn_timer = 0;
 Viewport viewport = {.x=0, .y=0};
 
 Sprite player = {.x=0, .y=0, .glyph=P_UP};
-Stats status = {.health=12, .lives=3, .clips=2, .rounds=12, .keys=1};
+Stats status = {.health=12, .lives=3, .clips=2, .rounds=CLIP_SIZE, .keys=1};
+
+Sprite muzzle = {.x=0, .y=0, .glyph=0};
+Sprite bullet = {.x=0, .y=0, .glyph=0};
+
+word shoot_timer = 0;
 
 const Level __memx *current_level;
 LevelDoors *current_level_doors;
@@ -81,9 +86,59 @@ int main (void)
                 player.glyph = P_UP;
             }
             
-            else if(buttons & _A)
+            
+            if(buttons & _A)
             {
-                click();
+                if (status.rounds > 0)
+                {
+                    status.rounds -= 1;
+                    click();
+                    
+                    shoot_timer = t+6;
+                    
+                    if (player.glyph == P_UP)
+                    {
+                        muzzle.glyph = F_UP;
+                        muzzle.x = player.x;
+                        muzzle.y = player.y-8;
+                        
+                        //TODO: Bullet
+                    }
+                    else if (player.glyph == P_DOWN)
+                    {
+                        muzzle.glyph = F_DOWN;
+                        muzzle.x = player.x;
+                        muzzle.y = player.y+8;
+                        
+                        //TODO: Bullet
+                    }
+                    else if (player.glyph == P_LEFT)
+                    {
+                        muzzle.glyph = F_LEFT;
+                        muzzle.x = player.x-8;
+                        muzzle.y = player.y;
+                        
+                        //TODO: Bullet
+                    }
+                    else if (player.glyph == P_RIGHT)
+                    {
+                        muzzle.glyph = F_RIGHT;
+                        muzzle.x = player.x+8;
+                        muzzle.y = player.y;
+                        
+                        //TODO: Bullet
+                    }
+                }
+                else
+                {
+                    if (status.clips > 0)
+                    {
+                        status.clips -= 1;
+                        status.rounds = CLIP_SIZE;
+                    }
+                    note(_A4, 10);
+                }
+                
                 btn_timer = t+BTN_DELAY;
             }
             else if(buttons & _B)
@@ -138,6 +193,12 @@ int main (void)
         draw_level(current_level, viewport.x, viewport.y);
         
         draw_sprite(&player, &viewport);
+        
+        if (shoot_timer > t)
+        {
+            draw_tile(&GLYPHS[muzzle.glyph], muzzle.x-viewport.x, muzzle.y-viewport.y);
+            draw_tile(&GLYPHS[bullet.glyph], bullet.x-viewport.x, bullet.y-viewport.y);
+        }
         
         /* Draw Doors */
         for (byte i=0 ; i<current_level_doors->num_doors ; i++)
