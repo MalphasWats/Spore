@@ -227,10 +227,14 @@ bool check_collision(const Level __memx *lvl, word x, word y)
                 {
                     status.keys -= 1;
                     current_level_doors->doors[i].open = TRUE;
+                    note(_A5, 10);
                     return FALSE;
                 }
                 else
+                {
+                    note(_A4, 10);
                     return TRUE;
+                }
             }
         }
         
@@ -242,6 +246,7 @@ bool check_collision(const Level __memx *lvl, word x, word y)
                 y < current_level_items->items[i].y+8 &&
                 !current_level_items->items[i].collected)
             {
+                note(_Cs5, 10);
                 current_level_items->items[i].collected = TRUE;
                 
                 status.health += current_level_items->items[i].stats.health;
