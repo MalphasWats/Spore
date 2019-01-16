@@ -114,6 +114,7 @@ static const __flash byte GLYPHS[] = {
 #define HUD_KEYS 19*8
 
 #define KEY_PICKUP 74*8
+#define CLIP_PICKUP 72*8
 
 #define P_UP        24*8
 #define P_RIGHT     36*8
@@ -213,7 +214,7 @@ LevelItems LEVEL_1_ITEMS = {
         {.x=2*8, .y=32*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=1}, .collected=FALSE},
         {.x=10*8, .y=16*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=2}, .collected=FALSE},
         {.x=18*8, .y=33*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=1}, .collected=FALSE},
-        {.x=16*8, .y=33*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=2, .rounds=0, .keys=0}, .collected=FALSE},
+        {.x=16*8, .y=33*8, .glyph=CLIP_PICKUP, .stats={.health=0, .lives=0, .clips=2, .rounds=0, .keys=0}, .collected=FALSE},
     }
 };
         
