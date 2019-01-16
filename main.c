@@ -8,7 +8,7 @@ word btn_timer = 0;
 Viewport viewport = {.x=0, .y=0};
 
 Sprite player = {.x=0, .y=0, .glyph=P_UP};
-Stats status = {.health=12, .lives=3, .clips=2, .rounds=CLIP_SIZE, .keys=1};
+Stats status = {.health=12, .lives=3, .clips=2, .rounds=CLIP_SIZE, .keys=2};
 
 Sprite muzzle = {.x=0, .y=0, .glyph=0};
 Sprite bullet = {.x=0, .y=0, .glyph=0};
