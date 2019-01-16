@@ -289,6 +289,7 @@ int main (void)
 
 cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
 {
+    //TODO: doing at grid level makes result wonky. Try at pixel level
     byte col = x >> 3;
     byte row = y >> 3;
     
