@@ -115,9 +115,14 @@ int main (void)
                         muzzle.x = player.x-4;
                         muzzle.y = player.y-15;
                         
-                        cell c = cast_to_collision(current_level, player.x, player.y, 0, -1);
+                        /*cell c = cast_to_collision(current_level, player.x, player.y, 0, -1);
                         bullet.x = (c.col * 8) - 1;
-                        bullet.y = (c.row+1) * 8;
+                        bullet.y = (c.row+1) * 8;*/
+                        
+                        point p = cast_to_collision(current_level, player.x, player.y, 0, -1);
+                        bullet.x = p.x-4;
+                        bullet.y = p.y+1;
+                        
                         bullet.glyph = B_UP;
                     }
                     else if (player.glyph == P_DOWN)
@@ -126,9 +131,14 @@ int main (void)
                         muzzle.x = player.x-5;
                         muzzle.y = player.y+6;
                         
-                        cell c = cast_to_collision(current_level, player.x, player.y, 0, 1);
+                        /*cell c = cast_to_collision(current_level, player.x, player.y, 0, 1);
                         bullet.x = (c.col * 8) - 1 ;
-                        bullet.y = (c.row-1) * 8;
+                        bullet.y = (c.row-1) * 8;*/
+                        
+                        point p = cast_to_collision(current_level, player.x, player.y, 0, 1);
+                        bullet.x = p.x-5;
+                        bullet.y = p.y-9;
+                        
                         bullet.glyph = B_DOWN;
                     }
                     else if (player.glyph == P_LEFT)
@@ -137,9 +147,14 @@ int main (void)
                         muzzle.x = player.x-10;
                         muzzle.y = player.y-4;
                         
-                        cell c = cast_to_collision(current_level, player.x, player.y, -1, 0);
+                        /*cell c = cast_to_collision(current_level, player.x, player.y, -1, 0);
                         bullet.x = (c.col+1) * 8;
-                        bullet.y = (c.row * 8) - 4;
+                        bullet.y = (c.row * 8) - 4;*/
+                        
+                        point p = cast_to_collision(current_level, player.x, player.y, -1, 0);
+                        bullet.x = p.x+1;
+                        bullet.y = p.y-4;
+                        
                         bullet.glyph = B_LEFT;
                     }
                     else if (player.glyph == P_RIGHT)
@@ -148,9 +163,14 @@ int main (void)
                         muzzle.x = player.x+2;
                         muzzle.y = player.y-4;
                         
-                        cell c = cast_to_collision(current_level, player.x, player.y, 1, 0);
+                        /*cell c = cast_to_collision(current_level, player.x, player.y, 1, 0);
                         bullet.x = ((c.col-1) * 8);
-                        bullet.y = (c.row * 8) - 4;
+                        bullet.y = (c.row * 8) - 4;*/
+                        
+                        point p = cast_to_collision(current_level, player.x, player.y, 1, 0);
+                        bullet.x = p.x-9;
+                        bullet.y = p.y-4;
+                        
                         bullet.glyph = B_RIGHT;
                     }
                 }
@@ -287,14 +307,14 @@ int main (void)
     }
 }
 
-cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
+/*cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
 {
     //TODO: doing at grid level makes result wonky. Try at pixel level
     byte col = x >> 3;
     byte row = y >> 3;
     
     while(lvl->tiles[ ( (row * lvl->cols) + col ) ] == 0)
-    {
+    {9
         col += dx;
         row += dy;
     }
@@ -302,6 +322,21 @@ cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
     //TODO: need to check doors too
     
     return (cell){col, row};
+}*/
+
+point cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
+{
+    //TODO: doing at grid level makes result wonky. Try at pixel level
+    
+    while(lvl->tiles[ ( ( (y>>3) * lvl->cols) + (x>>3) ) ] == 0)
+    {
+        x += dx;
+        y += dy;
+    }
+    
+    //TODO: need to check doors too
+    
+    return (point){x, y};
 }
 
 bool check_collision(const Level __memx *lvl, word x, word y)

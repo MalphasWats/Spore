@@ -209,7 +209,7 @@ LevelDoors LEVEL_1_DOORS = {
 };
 
 LevelItems LEVEL_1_ITEMS = {
-    .num_items=1,
+    .num_items=4,
     .items = {
         {.x=2*8, .y=32*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=1}, .collected=FALSE},
         {.x=13*8, .y=16*8, .glyph=KEY_PICKUP, .stats={.health=0, .lives=0, .clips=0, .rounds=0, .keys=2}, .collected=FALSE},
@@ -268,7 +268,12 @@ typedef struct cell {
     int row;
 } cell;
 
-cell cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy);
+typedef struct point {
+    int x;
+    int y;
+} point;
+
+point cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy);
 bool check_collision(const Level __memx *lvl, word x, word y);
 
 void draw_tile(const byte __memx *glyph, int x, int y);
