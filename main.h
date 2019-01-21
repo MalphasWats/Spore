@@ -247,7 +247,7 @@ LevelItems LEVEL_1_ITEMS = {
 MobList LEVEL_1_MOBS = {
     .num_mobs = 1,
     .mobs = {
-        {.sprite={.x=14*8, .y=31*8, .glyph=M_RIGHT}, .health=6, .timer=0},
+        {.sprite={.x=14*8, .y=32*8, .glyph=M_RIGHT}, .health=6, .timer=0},
     }
 };
         
