@@ -398,7 +398,8 @@ void draw_sprite(Sprite *s, Viewport *v)
 
 void draw_tile(const byte __memx *glyph, int x, int y)
 {
-    /* is the tile actually visible */
+    /* is the tile actually visible
+       Last one is y >= SCREEN_HEIGHT because of the HUD */
     if (x < -7 || x >= SCREEN_WIDTH+7 || y < -7 || y >= SCREEN_HEIGHT)
         return;
     
