@@ -326,9 +326,8 @@ int main (void)
 
 point cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
 {
-    //TODO: doing at grid level makes result wonky. Try at pixel level
-    
-    while(lvl->tiles[ ( ( (y>>3) * lvl->cols) + (x>>3) ) ] == 0)
+    while(lvl->tiles[ ( ( (y>>3) * lvl->cols) + (x>>3) ) ] == 0 &&
+           x >= 0 && x < lvl->cols*8 && y >= 0 && y < lvl->rows*8)
     {
         x += dx;
         y += dy;
