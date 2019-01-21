@@ -263,10 +263,6 @@ static const __flash Level LEVEL_1 = {
             }
 };
 
-typedef struct cell {
-    int col;
-    int row;
-} cell;
 
 typedef struct point {
     int x;
