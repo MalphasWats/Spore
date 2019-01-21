@@ -254,10 +254,33 @@ int main (void)
         /* Draw Mobs */
         for (byte i=0 ; i<current_level_mobs->num_mobs ; i++)
         {
-            //TODO: Update mobs too.
             if (current_level_mobs->mobs[i].health > 0)
             {
-                draw_sprite(&current_level_mobs->mobs[i].sprite, &viewport);
+                if (current_level_mobs->mobs[i].timer >= t)
+                {
+                    if (current_level_mobs->mobs[i].sprite.glyph == M_RIGHT)
+                    {
+                        current_level_mobs->mobs[i].sprite.x += 1;
+                        if (check_collision(current_level, current_level_mobs->mobs[i].sprite.x, current_level_mobs->mobs[i].sprite.y))
+                        {
+                            current_level_mobs->mobs[i].sprite.glyph = M_LEFT;
+                            current_level_mobs->mobs[i].sprite.x -= 1;
+                        }
+                    }
+                    else
+                    {
+                        current_level_mobs->mobs[i].sprite.x -= 1;
+                        if (check_collision(current_level, current_level_mobs->mobs[i].sprite.x, current_level_mobs->mobs[i].sprite.y))
+                        {
+                            current_level_mobs->mobs[i].sprite.glyph = M_RIGHT;
+                            current_level_mobs->mobs[i].sprite.x += 1;
+                        }
+                    }
+                                    
+                    current_level_mobs->mobs[i].timer = t+30;
+                    
+                    draw_sprite(&current_level_mobs->mobs[i].sprite, &viewport);
+                }
             }
         }
                
