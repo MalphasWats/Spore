@@ -19,6 +19,7 @@ word shot_delay = 0;
 const Level __memx *current_level;
 LevelDoors *current_level_doors;
 LevelItems *current_level_items;
+MobList *current_level_mobs;
 
 int main (void) 
 {
@@ -42,6 +43,7 @@ int main (void)
     current_level = &LEVEL_1;
     current_level_doors = &LEVEL_1_DOORS;
     current_level_items = &LEVEL_1_ITEMS;
+    current_level_mobs = &LEVEL_1_MOBS;
     
     player.x = current_level->start_x;
     player.y = current_level->start_y;
@@ -109,13 +111,15 @@ int main (void)
                     
                     shoot_timer = t+SHOT_ANIM_DELAY;
                     
+                    collision p = {.x=0, .y=0, .collisionType=WALL, .index=0};
+                    
                     if (player.glyph == P_UP)
                     {
                         muzzle.glyph = F_UP;
                         muzzle.x = player.x-4;
                         muzzle.y = player.y-15;
                         
-                        point p = cast_to_collision(current_level, player.x, player.y, 0, -1);
+                        p = cast_to_collision(current_level, player.x, player.y, 0, -1);
                         bullet.x = p.x-4;
                         bullet.y = p.y+1;
                         
@@ -127,7 +131,7 @@ int main (void)
                         muzzle.x = player.x-5;
                         muzzle.y = player.y+6;
                         
-                        point p = cast_to_collision(current_level, player.x, player.y, 0, 1);
+                        p = cast_to_collision(current_level, player.x, player.y, 0, 1);
                         bullet.x = p.x-5;
                         bullet.y = p.y-9;
                         
@@ -139,7 +143,7 @@ int main (void)
                         muzzle.x = player.x-10;
                         muzzle.y = player.y-4;
                         
-                        point p = cast_to_collision(current_level, player.x, player.y, -1, 0);
+                        p = cast_to_collision(current_level, player.x, player.y, -1, 0);
                         bullet.x = p.x+1;
                         bullet.y = p.y-4;
                         
@@ -151,12 +155,16 @@ int main (void)
                         muzzle.x = player.x+2;
                         muzzle.y = player.y-4;
                         
-                        point p = cast_to_collision(current_level, player.x, player.y, 1, 0);
+                        p = cast_to_collision(current_level, player.x, player.y, 1, 0);
                         bullet.x = p.x-9;
                         bullet.y = p.y-4;
                         
                         bullet.glyph = B_RIGHT;
                     }
+                    
+                    if (p.collisionType == MOB)
+                        current_level_mobs->mobs[p.index].health -= 1;
+                    
                 }
                 else
                 {
@@ -242,6 +250,16 @@ int main (void)
                 draw_tile(&GLYPHS[current_level_items->items[i].glyph], current_level_items->items[i].x-viewport.x, current_level_items->items[i].y-viewport.y);
             }
         }
+        
+        /* Draw Mobs */
+        for (byte i=0 ; i<current_level_mobs->num_mobs ; i++)
+        {
+            //TODO: Update mobs too.
+            if (current_level_mobs->mobs[i].health > 0)
+            {
+                draw_sprite(&current_level_mobs->mobs[i].sprite, &viewport);
+            }
+        }
                
         /* Display HUD on bottom row */
         for(byte i=0 ; i<SCREEN_WIDTH ; i++)
@@ -291,18 +309,39 @@ int main (void)
     }
 }
 
-point cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
+collision cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy)
 {
+    CollisionTypes c = WALL;
+    byte index = 0;
     while(lvl->tiles[ ( ( (y>>3) * lvl->cols) + (x>>3) ) ] == 0 &&
            x >= 0 && x < lvl->cols*8 && y >= 0 && y < lvl->rows*8)
     {
+        
+        for (byte i=0 ; i<current_level_mobs->num_mobs ; i++)
+        {
+            if (x >= current_level_mobs->mobs[i].sprite.x-8 &&
+                x < current_level_mobs->mobs[i].sprite.x+8  &&
+                y >= current_level_mobs->mobs[i].sprite.y-8 &&
+                y < current_level_mobs->mobs[i].sprite.y+8  &&
+                current_level_mobs->mobs[i].health > 0)         // Ugly but meh.
+            {
+                c = MOB;
+                index = i;
+            }
+        }
+        
+        if (c == MOB)
+            break;
+        
         x += dx;
         y += dy;
     }
     
     //TODO: need to check doors too
     
-    return (point){x, y};
+    
+    
+    return (collision){.x=x, .y=y, .collisionType=c, .index=index};
 }
 
 bool check_collision(const Level __memx *lvl, word x, word y)

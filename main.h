@@ -106,6 +106,11 @@ static const __flash byte GLYPHS[] = {
     0x00, 0x00, 0x05, 0x03, 0x06, 0x03, 0x05, 0x00, // Muzzle Flash DOWN
     0x36, 0x1c, 0x2a, 0x00, 0x00, 0x00, 0x00, 0x00, // Muzzle Flash LEFT
     0x00, 0x00, 0x00, 0x00, 0x00, 0x2a, 0x1c, 0x36, // Muzzle Flash RIGHT
+    
+    0x00, 0x00, 0x00, 0x00, 0x00, 0xb0, 0xb8, 0xcc, // Monster RIGHT (84)
+    0x6c, 0xac, 0x6c, 0x4c, 0x8c, 0x54, 0x0a, 0x00, 
+    0x00, 0x01, 0x01, 0x01, 0x01, 0x1a, 0x3b, 0x66, 
+    0x6d, 0x6a, 0x6d, 0x64, 0x63, 0x54, 0xa0, 0x00, 
 };
 
 #define HUD_HEALTH 16*8
@@ -137,6 +142,8 @@ static const __flash byte GLYPHS[] = {
 #define DOOR_L_OPEN     22*8
 #define DOOR_R_OPEN     23*8
 
+#define M_RIGHT     84*8
+
 
 typedef struct Sprite {
     int x;
@@ -152,6 +159,18 @@ typedef struct Door {
 } Door;
 
 #define MAX_DOORS 5
+
+typedef struct Mob {
+    Sprite sprite;
+    int health;
+} Mob;
+
+#define MAX_MOBS 6
+
+typedef struct MobList {
+    byte num_mobs;
+    Mob mobs[MAX_MOBS];
+} MobList;
 
 typedef struct Level {
     int start_x;
@@ -217,6 +236,13 @@ LevelItems LEVEL_1_ITEMS = {
         {.x=16*8, .y=33*8, .glyph=CLIP_PICKUP, .stats={.health=0, .lives=0, .clips=2, .rounds=0, .keys=0}, .collected=FALSE},
     }
 };
+
+MobList LEVEL_1_MOBS = {
+    .num_mobs = 1,
+    .mobs = {
+        {.sprite={.x=14*8, .y=31*8, .glyph=M_RIGHT}, .health=6},
+    }
+};
         
 
 static const __flash Level LEVEL_1 = {
@@ -269,7 +295,16 @@ typedef struct point {
     int y;
 } point;
 
-point cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy);
+typedef enum { WALL, DOOR, MOB } CollisionTypes;
+
+typedef struct collision {
+    int x;
+    int y;
+    CollisionTypes collisionType;
+    byte index;
+} collision;
+
+collision cast_to_collision(const Level __memx *lvl, int x, int y, int dx, int dy);
 bool check_collision(const Level __memx *lvl, word x, word y);
 
 void draw_tile(const byte __memx *glyph, int x, int y);
