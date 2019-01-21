@@ -256,7 +256,7 @@ int main (void)
         {
             if (current_level_mobs->mobs[i].health > 0)
             {
-                if (current_level_mobs->mobs[i].timer >= t)
+                if (current_level_mobs->mobs[i].timer <= t)
                 {
                     if (current_level_mobs->mobs[i].sprite.glyph == M_RIGHT)
                     {
