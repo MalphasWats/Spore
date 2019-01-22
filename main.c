@@ -165,7 +165,9 @@ int main (void)
                     if (p.collisionType == MOB)
                     {
                         current_level_mobs->mobs[p.index].health -= 1;
-                        current_level_mobs->mobs[p.index].timer += 250;
+                        current_level_mobs->mobs[p.index].move_timer += 250;
+                        current_level_mobs->mobs[p.index].attack_timer += 60;
+                        //TODO: define these numbers.
                     }
                     
                 }
@@ -258,7 +260,7 @@ int main (void)
         for (byte i=0 ; i<current_level_mobs->num_mobs ; i++)
         {
             
-            if (current_level_mobs->mobs[i].timer <= t)
+            if (current_level_mobs->mobs[i].move_timer <= t)
             {
                 if (current_level_mobs->mobs[i].sprite.glyph == M_RIGHT)
                 {
@@ -278,9 +280,21 @@ int main (void)
                         current_level_mobs->mobs[i].sprite.x += 1;
                     }
                 }
-                                
-                current_level_mobs->mobs[i].timer = t+40;
                 
+                /* is the player nearby? */
+                if (player.x > current_level_mobs->mobs[i].sprite.x-10 &&
+                    player.x < current_level_mobs->mobs[i].sprite.x+10 &&
+                    player.y > current_level_mobs->mobs[i].sprite.y-10 &&
+                    player.y < current_level_mobs->mobs[i].sprite.y+10 &&
+                    current_level_mobs->mobs[i].attack_timer <= t      &&
+                    current_level_mobs->mobs[i].health > 0)
+                {
+                    status.health -= 1;
+                    current_level_mobs->mobs[i].attack_timer = t+120;
+                }
+                                
+                current_level_mobs->mobs[i].move_timer = t+40;
+                //TODO: define delay numbers above.
                 
             }
                 
