@@ -302,7 +302,7 @@ typedef struct point {
     int y;
 } point;
 
-typedef enum { WALL, DOOR, MOB } CollisionTypes;
+typedef enum { WALL, DOOR, MOB, PLAYER } CollisionTypes;
 
 typedef struct collision {
     int x;
