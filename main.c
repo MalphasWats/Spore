@@ -163,7 +163,10 @@ int main (void)
                     }
                     
                     if (p.collisionType == MOB)
+                    {
                         current_level_mobs->mobs[p.index].health -= 1;
+                        current_level_mobs->mobs[p.index].timer += 250;
+                    }
                     
                 }
                 else
