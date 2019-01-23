@@ -330,7 +330,7 @@ int main (void)
         while (r>1)
         {
             buffer[( 7*SCREEN_WIDTH + 11*8) + 2*i] = 0x6c;
-            r >>= 1;
+            r -= 2;
             i += 1;
         }
         if ( status.rounds & 1 )
@@ -342,7 +342,7 @@ int main (void)
         while(k > 1)
         {
             buffer[( 7*SCREEN_WIDTH + 14*8) + 2*i] = 0x6c;
-            k >>= 1;
+            k -= 2;
             i += 1;
         }
         if ( status.keys & 1 )
